@@ -1,8 +1,7 @@
 package ru.netologia.sharinm_task_341;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ListActivity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,31 +9,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static Spinner spinnerLang;
-    public static Spinner spinnerColor;
+    private static final String APP_PREFERENCES =  "mysettings";
+    public static final String APP_PREFERENCES_LANG = "Lang";
+    public static final String APP_PREFERENCES_COLOR = "Color";
 
-    @Override
-    public void onSaveInstanceState(Bundle saveInstanceState){
+    public SharedPreferences.Editor editor;
 
-        saveInstanceState.putInt("valueSpinnerLang", spinnerLang.getSelectedItemPosition());
-        saveInstanceState.putInt("valueSpinnerColor", spinnerColor.getSelectedItemPosition());
+    public Spinner spinnerLang;
+    public Spinner spinnerColor;
 
-        super.onSaveInstanceState(saveInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle saveInstanceState){
-        super.onRestoreInstanceState(saveInstanceState);
-
-        spinnerLang.setSelection(saveInstanceState.getInt("valueSpinnerLang"));
-        spinnerColor.setSelection(saveInstanceState.getInt("valueSpinnerColor"));
-//        Toast.makeText(MainActivity.this, saveInstanceState.getInt("valueSpinnerLang") + " " + saveInstanceState.getInt("valueSpinnerColor"), Toast.LENGTH_LONG).show();
-    }
+    SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
 
         Button btnLang = findViewById(R.id.langButton);
         Button btnColor = findViewById(R.id.colorButton);
+
+        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        editor = mSettings.edit();
+        if(mSettings.contains(APP_PREFERENCES_COLOR)) {
+            spinnerColor.setSelection(mSettings.getInt(APP_PREFERENCES_COLOR, 0));
+        }
+        if(mSettings.contains(APP_PREFERENCES_LANG)) {
+            spinnerLang.setSelection(mSettings.getInt(APP_PREFERENCES_LANG, 0));
+        }
 
         btnLang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
                 config.setLocale(locale);
                 getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
                 recreate();
+
+                editor.putInt(APP_PREFERENCES_LANG, (int) spinnerLang.getSelectedItemId());
+                editor.putInt(APP_PREFERENCES_COLOR, (int) spinnerColor.getSelectedItemId());
+                editor.apply();
+
                 Toast.makeText(MainActivity.this, getString(R.string.textTextView), Toast.LENGTH_LONG).show();
             }
         });
@@ -85,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 int selected = (int) spinnerColor.getSelectedItemId();
+
+                editor.putInt(APP_PREFERENCES_LANG, (int) spinnerLang.getSelectedItemId());
+                editor.putInt(APP_PREFERENCES_COLOR, (int) spinnerColor.getSelectedItemId());
+                editor.apply();
 
                 switch (selected) {
 
@@ -103,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 }
 

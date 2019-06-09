@@ -1,9 +1,7 @@
 package ru.netologia.sharinm_task_341;
 
-
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 
 public class Utils
 {
@@ -24,18 +22,6 @@ public class Utils
         activity.finish();
 
         activity.startActivity(new Intent(activity, activity.getClass()));
-
-        switch (sTheme) {
-            case THEME_BLACK:
-                MainActivity.spinnerColor.setSelection(0);
-                break;
-            case THEME_GREEN:
-                MainActivity.spinnerColor.setSelection(1);
-                break;
-            case THEME_BLUE:
-                MainActivity.spinnerColor.setSelection(2);
-                break;
-        }
     }
 
     /** Set the theme of the activity, according to the configuration. */
@@ -48,11 +34,9 @@ public class Utils
                 break;
             case THEME_GREEN:
                 activity.setTheme(R.style.AppThemeGreen);
-                MainActivity.spinnerLang.setSelection(1);
                 break;
             case THEME_BLUE:
                 activity.setTheme(R.style.AppThemeBlue);
-                MainActivity.spinnerLang.setSelection(2);
                 break;
             case THEME_DEFAULT:
                 activity.setTheme(R.style.AppTheme);
